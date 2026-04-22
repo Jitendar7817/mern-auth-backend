@@ -1,0 +1,1 @@
+export const API = "https://mern-auth-backend-ur14.onrender.com/api";
