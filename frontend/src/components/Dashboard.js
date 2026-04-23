@@ -8,12 +8,12 @@ function Dashboard() {
   const [location, setLocation] = useState("");
 
   useEffect(() => {
-    axios.get("http://localhost:5000/api/items")
+    axios.get("https://mern-auth-backend-ur14.onrender.com/api/items")
       .then(res => setItems(res.data));
   }, []);
 
   const addItem = async () => {
-    await axios.post("http://localhost:5000/api/items", {
+    await axios.post("", {
       itemName,
       location
     });
