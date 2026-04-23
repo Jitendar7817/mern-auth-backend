@@ -10,7 +10,7 @@ function Login({ setShowRegister }) {
   const handleLogin = async () => {
     try {
       const res = await axios.post(
-        "http://localhost:5000/api/login",
+        "https://mern-auth-backend-ur14.onrender.com/api/login",
         data
       );
 

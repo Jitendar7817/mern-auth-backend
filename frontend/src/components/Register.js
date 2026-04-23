@@ -11,7 +11,7 @@ function Register({ setShowRegister }) {
   const handleRegister = async () => {
     try {
       await axios.post(
-        "http://localhost:5000/api/register",
+        "https://mern-auth-backend-ur14.onrender.com/api/register",
         data
       );
 
