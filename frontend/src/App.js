@@ -1,27 +1,10 @@
-import 'bootstrap/dist/css/bootstrap.min.css';
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
-import Register from "./components/Register";
 import Login from "./components/Login";
 import Dashboard from "./components/Dashboard";
 
-const PrivateRoute = ({ children }) => {
-  return localStorage.getItem("token") ? children : <Navigate to="/login" />;
-};
-
 function App() {
-  return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<Register />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/dashboard" element={
-          <PrivateRoute>
-            <Dashboard />
-          </PrivateRoute>
-        } />
-      </Routes>
-    </BrowserRouter>
-  );
+  const token = localStorage.getItem("token");
+
+  return token ? <Dashboard /> : <Login />;
 }
 
 export default App;

@@ -1,132 +1,73 @@
-import React, { useState, useEffect } from "react";
 import axios from "axios";
+import { useEffect, useState } from "react";
 import Navbar from "./Navbar";
 
-const API = "https://mern-auth-backend-ur14.onrender.com/api";
-
 function Dashboard() {
-  const token = localStorage.getItem("token");
-
-  const [user, setUser] = useState({});
-  const [course, setCourse] = useState("");
-  const [oldPassword, setOldPassword] = useState("");
-  const [newPassword, setNewPassword] = useState("");
+  const [items, setItems] = useState([]);
+  const [itemName, setItemName] = useState("");
+  const [location, setLocation] = useState("");
 
   useEffect(() => {
-    const fetchUser = async () => {
-      try {
-        const res = await axios.get(`${API}/me`, {
-          headers: { Authorization: token }
-        });
-        setUser(res.data);
-      } catch {
-        alert("Error fetching user");
-      }
-    };
+    axios.get("http://localhost:5000/api/items")
+      .then(res => setItems(res.data));
+  }, []);
 
-    if (!token) {
-      window.location.href = "/login";
-    } else {
-      fetchUser();
-    }
-  }, [token]);
+  const addItem = async () => {
+    await axios.post("http://localhost:5000/api/items", {
+      itemName,
+      location
+    });
 
-  const updateCourse = async () => {
-    try {
-      await axios.put(`${API}/update-course`, { course }, {
-        headers: { Authorization: token }
-      });
-
-      const res = await axios.get(`${API}/me`, {
-        headers: { Authorization: token }
-      });
-      setUser(res.data);
-
-      alert("Course Updated ✅");
-      setCourse("");
-    } catch {
-      alert("Error updating course ❌");
-    }
-  };
-
-  const updatePassword = async () => {
-    try {
-      await axios.put(`${API}/update-password`, { oldPassword, newPassword }, {
-        headers: { Authorization: token }
-      });
-
-      alert("Password Updated ✅");
-      setOldPassword("");
-      setNewPassword("");
-    } catch {
-      alert("Error updating password ❌");
-    }
+    alert("Item Added");
+    window.location.reload();
   };
 
   return (
     <>
       <Navbar />
 
-      <div className="container mt-4">
+      <div style={{ padding: "20px" }}>
+        <h2>Lost & Found Items</h2>
 
-        {/* 👤 Profile Card */}
-        <div className="card shadow-lg border-0 p-4 mb-4 text-center">
-          <h3 className="mb-2">Welcome, {user.name}</h3>
-          <p className="text-muted mb-1">{user.email}</p>
-          <span className="badge bg-primary px-3 py-2">
-            Course: {user.course}
-          </span>
+        {/* Add Item */}
+        <div style={{
+          background: "white",
+          padding: "15px",
+          borderRadius: "10px",
+          marginBottom: "20px",
+          boxShadow: "0 2px 8px rgba(0,0,0,0.1)"
+        }}>
+          <h3>Add New Item</h3>
+
+          <input placeholder="Item Name"
+            onChange={e => setItemName(e.target.value)}
+          />
+
+          <input placeholder="Location"
+            onChange={e => setLocation(e.target.value)}
+          />
+
+          <button onClick={addItem}>Add Item</button>
         </div>
 
-        <div className="row">
-
-          {/* 🎓 Update Course */}
-          <div className="col-md-6">
-            <div className="card shadow border-0 p-4 mb-4">
-              <h5 className="mb-3 text-primary">🎓 Update Course</h5>
-
-              <input
-                className="form-control mb-3"
-                placeholder="Enter new course"
-                value={course}
-                onChange={(e) => setCourse(e.target.value)}
-              />
-
-              <button className="btn btn-primary w-100" onClick={updateCourse}>
-                Update Course
-              </button>
+        {/* Items Grid */}
+        <div style={{
+          display: "grid",
+          gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
+          gap: "20px"
+        }}>
+          {items.map((item, i) => (
+            <div key={i} style={{
+              background: "white",
+              padding: "15px",
+              borderRadius: "12px",
+              boxShadow: "0 4px 10px rgba(0,0,0,0.1)"
+            }}>
+              <h3>{item.itemName}</h3>
+              <p style={{ color: "gray" }}>{item.location}</p>
             </div>
-          </div>
-
-          {/* 🔑 Update Password */}
-          <div className="col-md-6">
-            <div className="card shadow border-0 p-4 mb-4">
-              <h5 className="mb-3 text-warning">🔑 Change Password</h5>
-
-              <input
-                className="form-control mb-2"
-                type="password"
-                placeholder="Old Password"
-                value={oldPassword}
-                onChange={(e) => setOldPassword(e.target.value)}
-              />
-
-              <input
-                className="form-control mb-3"
-                type="password"
-                placeholder="New Password"
-                value={newPassword}
-                onChange={(e) => setNewPassword(e.target.value)}
-              />
-
-              <button className="btn btn-warning w-100" onClick={updatePassword}>
-                Update Password
-              </button>
-            </div>
-          </div>
-
+          ))}
         </div>
-
       </div>
     </>
   );

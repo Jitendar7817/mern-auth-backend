@@ -1,19 +1,27 @@
-import React from "react";
-
 function Navbar() {
-  const logout = () => {
-    localStorage.removeItem("token");
-    window.location.href = "/login";
-  };
-
   return (
-    <nav className="navbar navbar-dark bg-dark px-4">
-      <h4 className="text-white">Student Portal</h4>
+    <div style={{
+      background: "#2563eb",
+      color: "white",
+      padding: "12px 20px",
+      display: "flex",
+      justifyContent: "space-between",
+      alignItems: "center",
+      boxShadow: "0 2px 10px rgba(0,0,0,0.1)"
+    }}>
+      <h2>🔍 Lost & Found</h2>
 
-      <button className="btn btn-danger" onClick={logout}>
+      <button style={{
+        width: "100px",
+        background: "#ef4444"
+      }}
+        onClick={() => {
+          localStorage.removeItem("token");
+          window.location.reload();
+        }}>
         Logout
       </button>
-    </nav>
+    </div>
   );
 }
 

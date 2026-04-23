@@ -1,7 +1,5 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import axios from "axios";
-
-const API = "https://mern-auth-backend-ur14.onrender.com/api";
 
 function Login() {
   const [data, setData] = useState({
@@ -9,55 +7,82 @@ function Login() {
     password: ""
   });
 
-  const handleChange = (e) => {
-    setData({ ...data, [e.target.name]: e.target.value });
-  };
-
-  const login = async () => {
+  const handleLogin = async () => {
     try {
-      const res = await axios.post(`${API}/login`, data);
+      const res = await axios.post(
+        "http://localhost:5000/api/login",
+        data
+      );
 
       localStorage.setItem("token", res.data.token);
       alert("Login Success ✅");
-
-      window.location.href = "/dashboard";
+      window.location.reload();
     } catch (err) {
-      alert(err.response?.data?.msg || "Invalid Credentials ❌");
+      alert("Login Failed ❌");
     }
   };
 
   return (
-    <div className="d-flex justify-content-center align-items-center vh-100 bg-light">
+    <div
+      style={{
+        position: "relative",
+        height: "100vh",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        background:
+          "url('https://images.unsplash.com/photo-1522202176988-66273c2fd55f') center/cover no-repeat"
+      }}
+    >
+      {/* 🔥 Dark Blur Overlay */}
+      <div
+        style={{
+          position: "absolute",
+          top: 0,
+          left: 0,
+          width: "100%",
+          height: "100%",
+          background: "rgba(0,0,0,0.6)",
+          backdropFilter: "blur(5px)"
+        }}
+      ></div>
 
-      <div className="card shadow-lg border-0 p-4" style={{ width: "350px" }}>
-        
-        <h3 className="text-center mb-4">🔐 Login</h3>
+      {/* 🧊 Login Card */}
+      <div
+        style={{
+          position: "relative",
+          background: "rgba(255,255,255,0.95)",
+          padding: "25px",
+          borderRadius: "12px",
+          width: "320px",
+          boxShadow: "0 8px 20px rgba(0,0,0,0.3)",
+          transition: "0.3s"
+        }}
+      >
+        <h2 style={{ textAlign: "center", marginBottom: "15px" }}>
+          🔐 Login
+        </h2>
 
         <input
-          className="form-control mb-3"
-          name="email"
+          type="email"
           placeholder="Email"
-          onChange={handleChange}
+          value={data.email}
+          onChange={(e) =>
+            setData({ ...data, email: e.target.value })
+          }
         />
 
         <input
-          className="form-control mb-3"
           type="password"
-          name="password"
           placeholder="Password"
-          onChange={handleChange}
+          value={data.password}
+          onChange={(e) =>
+            setData({ ...data, password: e.target.value })
+          }
         />
 
-        <button className="btn btn-primary w-100 mb-2" onClick={login}>
-          Login
-        </button>
-
-        <p className="text-center mt-2">
-          New user? <a href="/">Register</a>
-        </p>
-
+        <button onClick={handleLogin}>Login</button>
       </div>
-
     </div>
   );
 }
