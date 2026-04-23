@@ -1,7 +1,7 @@
 import { useState } from "react";
 import axios from "axios";
 
-function Login() {
+function Login({ setShowRegister }) {
   const [data, setData] = useState({
     email: "",
     password: ""
@@ -17,7 +17,7 @@ function Login() {
       localStorage.setItem("token", res.data.token);
       alert("Login Success ✅");
       window.location.reload();
-    } catch (err) {
+    } catch {
       alert("Login Failed ❌");
     }
   };
@@ -34,12 +34,10 @@ function Login() {
           "url('https://images.unsplash.com/photo-1522202176988-66273c2fd55f') center/cover no-repeat"
       }}
     >
-      {/* 🔥 Dark Blur Overlay */}
+      {/* Dark Blur */}
       <div
         style={{
           position: "absolute",
-          top: 0,
-          left: 0,
           width: "100%",
           height: "100%",
           background: "rgba(0,0,0,0.6)",
@@ -47,7 +45,7 @@ function Login() {
         }}
       ></div>
 
-      {/* 🧊 Login Card */}
+      {/* Card */}
       <div
         style={{
           position: "relative",
@@ -55,18 +53,13 @@ function Login() {
           padding: "25px",
           borderRadius: "12px",
           width: "320px",
-          boxShadow: "0 8px 20px rgba(0,0,0,0.3)",
-          transition: "0.3s"
+          boxShadow: "0 8px 20px rgba(0,0,0,0.3)"
         }}
       >
-        <h2 style={{ textAlign: "center", marginBottom: "15px" }}>
-          🔐 Login
-        </h2>
+        <h2 style={{ textAlign: "center" }}>🔐 Login</h2>
 
         <input
-          type="email"
           placeholder="Email"
-          value={data.email}
           onChange={(e) =>
             setData({ ...data, email: e.target.value })
           }
@@ -75,13 +68,24 @@ function Login() {
         <input
           type="password"
           placeholder="Password"
-          value={data.password}
           onChange={(e) =>
             setData({ ...data, password: e.target.value })
           }
         />
 
         <button onClick={handleLogin}>Login</button>
+
+        {/* Switch to Register */}
+        <p style={{ textAlign: "center" }}>
+          Don't have an account?
+        </p>
+
+        <button
+          style={{ background: "#22c55e" }}
+          onClick={() => setShowRegister(true)}
+        >
+          Create Account
+        </button>
       </div>
     </div>
   );
